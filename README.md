@@ -146,7 +146,7 @@ cd automated-data-delivery
 
 2. Add GitHub Secrets
 Go to:
-```bash
+```pgsql
 Repo → Settings → Secrets → Actions
 ```
 Add:
