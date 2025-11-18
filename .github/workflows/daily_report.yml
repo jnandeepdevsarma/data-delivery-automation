@@ -1,0 +1,35 @@
+name: Daily Market Report
+
+on:
+  schedule:
+    - cron: '0 22 * * 0-4' # run at 22:00 UTC Mon-Fri
+  workflow_dispatch: {}
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily report
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          EXTRA_CONFIG: ${{ secrets.EXTRA_CONFIG }}
+        run: |
+          python scripts/fetch_data.py --out /tmp/data.json
+          python scripts/signal_engine.py --in /tmp/data.json --out /tmp/signals.json
+          python scripts/render_card.py --in /tmp/signals.json --out /tmp/report.png
+          python scripts/send_telegram.py --image /tmp/report.png --text "Daily Market Overview"
