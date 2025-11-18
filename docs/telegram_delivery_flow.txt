@@ -1,0 +1,136 @@
+===========================================================
+TELEGRAM DELIVERY FLOW
+Automated Data Delivery System (GitHub Actions + Telegram)
+===========================================================
+
+OVERVIEW
+
+This document describes the complete flow of how the
+system delivers the generated market report (PNG + caption)
+to Telegram every day using the Telegram Bot API.
+The entire process is automated and runs inside GitHub Actions.
+
+===========================================================
+1. PREPARATION
+===========================================================
+
+Secrets required:
+  - TELEGRAM_BOT_TOKEN
+  - TELEGRAM_CHAT_ID
+
+These are stored securely inside:
+  GitHub Repository → Settings → Secrets → Actions
+
+No tokens are committed to the source code.
+
+===========================================================
+2. REPORT GENERATION
+===========================================================
+
+Previous steps in the pipeline produce:
+  /tmp/signals.json      (computed signals)
+  /tmp/report.png        (market overview card)
+
+Only after both files are successfully created,
+the Telegram delivery script is triggered.
+
+===========================================================
+3. TELEGRAM SENDER SCRIPT
+===========================================================
+
+The delivery is handled by:
+  scripts/send_telegram.py
+
+Main operations:
+
+  1. Load bot token and chat ID from environment variables
+  2. Open the PNG file to be delivered
+  3. Call Telegram Bot API:
+       sendPhoto(chat_id, photo, caption)
+  4. Confirm delivery response
+  5. Print confirmation log to GitHub Actions
+
+The script handles:
+  - Photo upload
+  - Captions
+  - Error messages
+  - Fallbacks (send text-only message if image fails)
+
+===========================================================
+4. TELEGRAM API ENDPOINT
+===========================================================
+
+The script communicates with:
+  https://api.telegram.org/bot<token>/sendPhoto
+
+Parameters:
+  chat_id   → where the report is sent
+  photo     → PNG image file
+  caption   → short summary text
+
+Example API payload:
+  {
+    "chat_id": "-123456789",
+    "caption": "Daily Market Overview",
+    "photo": <binary PNG>
+  }
+
+===========================================================
+5. FAILURE HANDLING
+===========================================================
+
+If the image cannot be delivered:
+  - The script sends a backup text message:
+      "Report failed to upload. Please check logs."
+
+If both photo and text fail:
+  - GitHub Actions job fails and sends the error log.
+
+===========================================================
+6. GITHUB ACTIONS INTEGRATION
+===========================================================
+
+GitHub workflow step:
+
+  - name: Send Telegram
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    run: |
+      python scripts/send_telegram.py \
+        --image /tmp/report.png \
+        --text "Daily Market Overview"
+
+The delivery step runs only after:
+  - fetch_data.py completes
+  - signal_engine.py completes
+  - render_card.py completes
+
+===========================================================
+7. SECURITY NOTES
+===========================================================
+
+- Bot token is NEVER logged or printed.
+- Bot permissions limited to:
+     • sending messages
+     • uploading images
+- Group/channel must add the bot before receiving reports.
+- Only GitHub Actions environment has access to the token.
+
+===========================================================
+8. SUMMARY
+===========================================================
+
+The Telegram delivery system:
+  • Runs automatically every day
+  • Uses secure GitHub secrets
+  • Uploads cleanly formatted PNG reports
+  • Provides fallback handling for failures
+  • Integrates seamlessly with the full data pipeline
+
+This is the final step in the automated 
+market intelligence delivery workflow.
+
+===========================================================
+END OF DOCUMENT
+===========================================================
