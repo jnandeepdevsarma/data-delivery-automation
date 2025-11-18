@@ -1,0 +1,31 @@
+{
+  "symbol": "NDX",
+  "timestamp": "2025-11-17T09:30:00Z",
+  "last_price": 17892.54,
+  "open": 17620.50,
+  "high": 17920.10,
+  "low": 17580.20,
+  "prev_close": 17640.10,
+
+  "price_change": 252.44,
+  "percent_change": 1.43,
+
+  "trend_direction": "Uptrend",
+  "trend_angle": 12.4,
+  "trend_strength": 0.78,
+
+  "volatility": 0.89,
+  "volatility_label": "Moderate",
+
+  "mvo_score": 0.62,
+  "mvo_label": "Mild Bullish",
+
+  "hpd_score": 0.41,
+  "hpd_label": "Healthy Deviation",
+
+  "momentum": "Positive",
+  "momentum_score": 0.72,
+
+  "liquidity_index": 0.91,
+  "market_summary": "NASDAQ shows strong bullish activity with stable volatility and positive momentum. Trend remains upward with a confident structure."
+}

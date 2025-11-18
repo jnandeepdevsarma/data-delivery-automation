@@ -1,0 +1,16 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {...},
+        "timestamp": [...],
+        "indicators": {
+          "quote": [
+            {"open": [...], "close": [...], "high": [...], "low": [...], "volume": [...]}
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}
