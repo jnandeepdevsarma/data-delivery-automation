@@ -150,11 +150,12 @@ Go to:
 Repo → Settings → Secrets → Actions
 ```
 Add:
-```bash
-Secret Name		Value
-TELEGRAM_BOT_TOKEN	Your bot token (from BotFather)
-TELEGRAM_CHAT_ID		Your chat/group/channel ID
-(Optional) API_KEY		If using external market API
+```markdown
+| Secret Name          | Value / Description                         |
+|----------------------|----------------------------------------------|
+| TELEGRAM_BOT_TOKEN   | Your bot token (from BotFather)              |
+| TELEGRAM_CHAT_ID     | Your chat / group / channel ID              |
+| API_KEY (optional)   | If using an external market data API         |
 ```
 
 # GitHub Actions Automation
