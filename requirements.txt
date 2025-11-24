@@ -1,0 +1,7 @@
+requests
+pandas
+numpy
+matplotlib
+Pillow
+python-telegram-bot
+pyyaml
